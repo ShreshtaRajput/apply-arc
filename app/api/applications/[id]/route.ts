@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Application from "@/models/Application";
+import { redis } from "@/lib/redis";
 
 // PATCH /api/applications/:id — update stage, order, or any field
 export async function PATCH(
@@ -24,6 +25,12 @@ export async function PATCH(
 
     if (!application)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    try {
+      await redis.del(`board:${uid}`);
+    } catch (redisDelError) {
+      console.error(`[Redis DEL Error] Key: board:${uid}`, redisDelError);
+    }
 
     return NextResponse.json(application);
   } catch (error) {
@@ -54,6 +61,12 @@ export async function DELETE(
 
     if (!application)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    try {
+      await redis.del(`board:${uid}`);
+    } catch (redisDelError) {
+      console.error(`[Redis DEL Error] Key: board:${uid}`, redisDelError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

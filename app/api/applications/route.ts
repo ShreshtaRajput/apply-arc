@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Application from "@/models/Application";
+import { IApplication } from "@/models/Application";
+import { redis } from "@/lib/redis";
 
 // GET /api/applications — fetch all apps for a user
 export async function GET(req: NextRequest) {
@@ -9,11 +11,28 @@ export async function GET(req: NextRequest) {
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    const cacheKey = `board:${uid}`;
+
+    try {
+      const cachedData = await redis.get<IApplication[]>(cacheKey);
+      if (cachedData) {
+        return NextResponse.json(cachedData);
+      }
+    } catch (redisGetError) {
+      console.error(`[Redis GET Error] Key: ${cacheKey}`, redisGetError);
+    }
+
     await connectDB();
     const applications = await Application.find({ uid }).sort({
       stage: 1,
       order: 1,
     });
+
+    try {
+      await redis.set(cacheKey, applications, { ex: 60 });
+    } catch (redisSetError) {
+      console.error(`[Redis SET Error] Key: ${cacheKey}`, redisSetError);
+    }
 
     return NextResponse.json(applications);
   } catch (error) {
@@ -56,6 +75,12 @@ export async function POST(req: NextRequest) {
       stage,
       order,
     });
+
+    try {
+      await redis.del(`board:${uid}`);
+    } catch (redisDelError) {
+      console.error(`[Redis DEL Error] Key: board:${uid}`, redisDelError);
+    }
 
     return NextResponse.json(application, { status: 201 });
   } catch (error) {
