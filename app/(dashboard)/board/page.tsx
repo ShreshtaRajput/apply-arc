@@ -8,6 +8,7 @@ import {
   selectBoardStatus,
 } from "@/store/slices/boardSlice";
 import BoardContainer from "@/components/board/BoardContainer";
+import LogoutButton from "@/components/ui/LogoutButton";
 
 export default function BoardPage() {
   const { user } = useAuth();
@@ -43,6 +44,7 @@ export default function BoardPage() {
           </div>
           <span className="text-white font-semibold text-sm">ApplyArc</span>
         </div>
+        <LogoutButton />
         <p className="text-white/30 text-xs">{user?.email}</p>
       </nav>
 

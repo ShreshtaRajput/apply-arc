@@ -29,6 +29,7 @@ export async function verifyUserAuth(req: NextRequest) {
     console.log("Decoded Token:", decodedToken);
     return decodedToken.uid;
   } catch (error: any) {
+    console.error("Error code:", error.code);
     if (error.code === "auth/user-not-found") {
       console.log(`User ${uid} deleted. Cleaning up MongoDB data...`);
       await connectDB();

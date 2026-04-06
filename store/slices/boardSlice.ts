@@ -123,6 +123,11 @@ const boardSlice = createSlice({
         app.order = order;
       }
     },
+    resetBoard(state) {
+      state.applications = [];
+      state.status = "idle";
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     // fetchApplications
@@ -162,7 +167,7 @@ const boardSlice = createSlice({
   },
 });
 
-export const { moveApplication } = boardSlice.actions;
+export const { moveApplication, resetBoard } = boardSlice.actions;
 export default boardSlice.reducer;
 
 // Selectors — these are used in React components to read data from the store
