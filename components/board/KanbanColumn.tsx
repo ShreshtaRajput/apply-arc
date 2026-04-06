@@ -64,11 +64,7 @@ export default function KanbanColumn({
           }`}
         >
           {applications.map((app) => (
-            <ApplicationCard
-              key={app._id}
-              application={app}
-              onClick={onCardClick}
-            />
+            <ApplicationCard key={app._id} application={app} />
           ))}
 
           <AddCardForm

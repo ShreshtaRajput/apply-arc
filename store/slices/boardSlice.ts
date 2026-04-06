@@ -15,10 +15,17 @@ const initialState: BoardState = {
 };
 
 // Helper — builds the header every API call needs
-function authHeader(uid: string) {
+// function authHeader(uid: string) {
+//   return {
+//     "Content-Type": "application/json",
+//     "x-user-uid": uid,
+//   };
+// }
+async function authHeader() {
+  const token = await auth.currentUser?.getIdToken();
   return {
     "Content-Type": "application/json",
-    "x-user-uid": uid,
+    Authorization: `Bearer ${token}`,
   };
 }
 
@@ -26,10 +33,10 @@ function authHeader(uid: string) {
 // Fetch all applications on board load
 export const fetchApplications = createAsyncThunk(
   "board/fetchApplications",
-  async (uid: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await fetch("/api/applications", {
-        headers: authHeader(uid),
+        headers: await authHeader(),
       });
       if (!res.ok) throw new Error("Failed to fetch");
       return (await res.json()) as Application[];
@@ -43,18 +50,13 @@ export const fetchApplications = createAsyncThunk(
 export const addApplication = createAsyncThunk(
   "board/addApplication",
   async (
-    {
-      uid,
-      company,
-      role,
-      stage,
-    }: { uid: string; company: string; role: string; stage: Stage },
+    { company, role, stage }: { company: string; role: string; stage: Stage },
     { rejectWithValue },
   ) => {
     try {
       const res = await fetch("/api/applications", {
         method: "POST",
-        headers: authHeader(uid),
+        headers: await authHeader(),
         body: JSON.stringify({ company, role, stage }),
       });
       if (!res.ok) throw new Error("Failed to create");
@@ -69,17 +71,13 @@ export const addApplication = createAsyncThunk(
 export const updateApplication = createAsyncThunk(
   "board/updateApplication",
   async (
-    {
-      uid,
-      id,
-      updates,
-    }: { uid: string; id: string; updates: Partial<Application> },
+    { id, updates }: { id: string; updates: Partial<Application> },
     { rejectWithValue },
   ) => {
     try {
       const res = await fetch(`/api/applications/${id}`, {
         method: "PATCH",
-        headers: authHeader(uid),
+        headers: await authHeader(),
         body: JSON.stringify(updates),
       });
       if (!res.ok) throw new Error("Failed to update");
@@ -93,11 +91,11 @@ export const updateApplication = createAsyncThunk(
 // Delete a card
 export const deleteApplication = createAsyncThunk(
   "board/deleteApplication",
-  async ({ uid, id }: { uid: string; id: string }, { rejectWithValue }) => {
+  async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
       const res = await fetch(`/api/applications/${id}`, {
         method: "DELETE",
-        headers: authHeader(uid),
+        headers: await authHeader(),
       });
       if (!res.ok) throw new Error("Failed to delete");
       return id; // return the id so we can remove it from state
@@ -171,6 +169,7 @@ export default boardSlice.reducer;
 
 import type { RootState } from "../index";
 
+import { auth } from "@/lib/firebase";
 // Get all apps for a specific column
 export const selectByStage = (stage: Stage) => (state: RootState) =>
   state.board.applications

@@ -89,7 +89,6 @@ export default function BoardContainer() {
       // 2. Make changes in mongoDB in the background
       dispatch(
         updateApplication({
-          uid: user.uid,
           id: activeId,
           updates: { stage: targetStage, order: newOrder },
         }),
@@ -101,7 +100,7 @@ export default function BoardContainer() {
   const handleAddCard = useCallback(
     (company: string, role: string, stage: Stage) => {
       if (!user) return;
-      dispatch(addApplication({ uid: user.uid, company, role, stage }));
+      dispatch(addApplication({ company, role, stage }));
     },
     [user, dispatch],
   );

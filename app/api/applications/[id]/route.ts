@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Application from "@/models/Application";
 import { redis } from "@/lib/redis";
+import { verifyUserAuth } from "@/lib/verifyToken";
 
 // PATCH /api/applications/:id — update stage, order, or any field
 export async function PATCH(
@@ -9,7 +10,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const uid = req.headers.get("x-user-uid");
+    // const uid = req.headers.get("x-user-uid");
+    const uid = await verifyUserAuth(req);
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -47,7 +49,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const uid = req.headers.get("x-user-uid");
+    // const uid = req.headers.get("x-user-uid");
+    const uid = await verifyUserAuth(req);
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

@@ -40,7 +40,6 @@ export default function ApplicationModal({
     dispatch(
       updateApplication({
         id: application._id,
-        uid,
         updates: formData,
       }),
     );

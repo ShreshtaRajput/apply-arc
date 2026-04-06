@@ -3,11 +3,13 @@ import { connectDB } from "@/lib/mongodb";
 import Application from "@/models/Application";
 import { IApplication } from "@/models/Application";
 import { redis } from "@/lib/redis";
+import { verifyUserAuth } from "@/lib/verifyToken";
 
 // GET /api/applications — fetch all apps for a user
 export async function GET(req: NextRequest) {
   try {
-    const uid = req.headers.get("x-user-uid");
+    // const uid = req.headers.get("x-user-uid");
+    const uid = await verifyUserAuth(req);
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -36,6 +38,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(applications);
   } catch (error) {
+    console.error("[GET /api/applications Error]", error);
     return NextResponse.json(
       { error: "Failed to fetch applications" },
       { status: 500 },
@@ -46,7 +49,8 @@ export async function GET(req: NextRequest) {
 // POST /api/applications — create a new application
 export async function POST(req: NextRequest) {
   try {
-    const uid = req.headers.get("x-user-uid");
+    // const uid = req.headers.get("x-user-uid");
+    const uid = await verifyUserAuth(req);
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
