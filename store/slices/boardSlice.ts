@@ -33,7 +33,7 @@ async function authHeader() {
 // Fetch all applications on board load
 export const fetchApplications = createAsyncThunk(
   "board/fetchApplications",
-  async (_, { rejectWithValue }) => {
+  async (uid: String, { rejectWithValue }) => {
     try {
       const res = await fetch("/api/applications", {
         headers: await authHeader(),
