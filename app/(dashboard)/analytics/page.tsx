@@ -20,7 +20,7 @@ import {
 import { useAuth } from "@/lib/AuthContext";
 import { fetchApplications } from "@/store/slices/boardSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import LogoutButton from "@/components/ui/LogoutButton"; // Added import for the navbar
+import { useSocket } from "@/hooks/useSocket";
 
 // Updated the first color to match the ApplyArc brand orange
 const COLORS = [
@@ -38,6 +38,7 @@ export default function AnalyticsPage() {
   const applications = useAppSelector(
     (state: RootState) => state.board.applications,
   );
+  useSocket();
 
   useEffect(() => {
     if (user && applications.length === 0)
@@ -79,25 +80,6 @@ export default function AnalyticsPage() {
   return (
     // Replaced the simple wrapper with the BoardPage's dark background wrapper
     <div className="min-h-screen bg-[#0C0C14]">
-      {/* Navbar - Copied exactly from BoardPage */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/8">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-[#FF5533] flex items-center justify-center">
-            <svg viewBox="0 0 12 12" width="12" height="12" fill="none">
-              <path
-                d="M2 9 Q6 2 10 9"
-                stroke="white"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <span className="text-white font-semibold text-sm">ApplyArc</span>
-        </div>
-        <LogoutButton />
-        <p className="text-white/30 text-xs">{user?.email}</p>
-      </nav>
-
       {/* Main Content Area */}
       <div className="p-6 max-w-7xl mx-auto space-y-8">
         {/* Header */}

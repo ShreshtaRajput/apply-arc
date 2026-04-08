@@ -128,6 +128,24 @@ const boardSlice = createSlice({
       state.status = "idle";
       state.error = null;
     },
+    // Socket-driven updates — these only mutate local Redux state,
+    // no API call, because the DB write already happened on another client
+    remoteAddApplication(state, action: PayloadAction<Application>) {
+      state.applications.push(action.payload);
+    },
+
+    remoteUpdateApplication(state, action: PayloadAction<Application>) {
+      const index = state.applications.findIndex(
+        (a) => a._id === action.payload._id,
+      );
+      if (index !== -1) state.applications[index] = action.payload;
+    },
+
+    remoteDeleteApplication(state, action: PayloadAction<string>) {
+      state.applications = state.applications.filter(
+        (a) => a._id !== action.payload,
+      );
+    },
   },
   extraReducers: (builder) => {
     // fetchApplications
@@ -167,7 +185,13 @@ const boardSlice = createSlice({
   },
 });
 
-export const { moveApplication, resetBoard } = boardSlice.actions;
+export const {
+  moveApplication,
+  resetBoard,
+  remoteAddApplication,
+  remoteUpdateApplication,
+  remoteDeleteApplication,
+} = boardSlice.actions;
 export default boardSlice.reducer;
 
 // Selectors — these are used in React components to read data from the store

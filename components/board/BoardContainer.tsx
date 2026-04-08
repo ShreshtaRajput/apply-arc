@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { use, useCallback } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -21,10 +21,12 @@ import {
 } from "@/store/slices/boardSlice";
 import { Stage, STAGES, Application } from "@/types";
 import KanbanColumn from "./KanbanColumn";
+import { useSocket } from "@/hooks/useSocket";
 
 export default function BoardContainer() {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
+  useSocket();
 
   // dnd-kit will acitvate a dragging event as soon as the card is clicked
   // adding an activation constraint (drag 8px before it counts as a drag) makes it possible to click cards without accidentally dragging them

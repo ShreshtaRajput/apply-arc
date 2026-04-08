@@ -4,6 +4,7 @@ import Application from "@/models/Application";
 import { IApplication } from "@/models/Application";
 import { redis } from "@/lib/redis";
 import { verifyUserAuth } from "@/lib/verifyToken";
+import getIO from "@/lib/socket";
 
 // GET /api/applications — fetch all apps for a user
 export async function GET(req: NextRequest) {
@@ -79,6 +80,12 @@ export async function POST(req: NextRequest) {
       stage,
       order,
     });
+
+    try {
+      getIO().emit("board:updated", { type: "create", application });
+    } catch (socketError) {
+      console.error("[Socket emit error]", socketError);
+    }
 
     try {
       await redis.del(`board:${uid}`);

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import LogoutButton from "@/components/ui/LogoutButton";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function DashboardLayout({
   children,
@@ -12,6 +14,7 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Listen for changes in the user's authentication state
@@ -38,5 +41,26 @@ export default function DashboardLayout({
     );
   }
 
-  return <div className="dashboard-layout">{children}</div>;
+  return (
+    <div className="dashboard-layout">
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/8 bg-[#0C0C14]">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-full bg-[#FF5533] flex items-center justify-center">
+            <svg viewBox="0 0 12 12" width="12" height="12" fill="none">
+              <path
+                d="M2 9 Q6 2 10 9"
+                stroke="white"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+          <span className="text-white font-semibold text-sm">ApplyArc</span>
+        </div>
+        <LogoutButton />
+        <p className="text-white/30 text-xs">{user?.email}</p>
+      </nav>
+      {children}
+    </div>
+  );
 }

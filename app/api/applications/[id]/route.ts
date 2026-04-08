@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import Application from "@/models/Application";
 import { redis } from "@/lib/redis";
 import { verifyUserAuth } from "@/lib/verifyToken";
+import getIO from "@/lib/socket";
 
 // PATCH /api/applications/:id — update stage, order, or any field
 export async function PATCH(
@@ -27,6 +28,12 @@ export async function PATCH(
 
     if (!application)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    try {
+      getIO().emit("board:updated", { type: "update", application });
+    } catch (socketError) {
+      console.error("[Socket emit error]", socketError);
+    }
 
     try {
       await redis.del(`board:${uid}`);
@@ -64,6 +71,15 @@ export async function DELETE(
 
     if (!application)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    try {
+      getIO().emit("board:updated", {
+        type: "delete",
+        application: application._id.toString(),
+      });
+    } catch (socketError) {
+      console.error("[Socket emit error]", socketError);
+    }
 
     try {
       await redis.del(`board:${uid}`);
