@@ -5,6 +5,8 @@ import { IApplication } from "@/models/Application";
 import { redis } from "@/lib/redis";
 import { verifyUserAuth } from "@/lib/verifyToken";
 import getIO from "@/lib/socket";
+import { ApplicationPostSchema } from "@/lib/validation/application";
+import { ratelimit } from "@/lib/ratelimit";
 
 // GET /api/applications — fetch all apps for a user
 export async function GET(req: NextRequest) {
@@ -13,6 +15,11 @@ export async function GET(req: NextRequest) {
     const uid = await verifyUserAuth(req);
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { success } = await ratelimit.limit(uid);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
 
     const cacheKey = `board:${uid}`;
 
@@ -55,15 +62,25 @@ export async function POST(req: NextRequest) {
     if (!uid)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const body = await req.json();
-    const { company, role, stage = "saved" } = body;
+    const { success } = await ratelimit.limit(uid);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
 
-    if (!company || !role) {
+    const body = await req.json();
+    const result = ApplicationPostSchema.safeParse(body);
+
+    if (!result.success) {
       return NextResponse.json(
-        { error: "Company and role are required" },
+        {
+          error: "Validation failed",
+          details: result.error.flatten().fieldErrors,
+        },
         { status: 400 },
       );
     }
+
+    const { company, stage, role } = result.data;
 
     await connectDB();
 
@@ -95,6 +112,15 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(application, { status: 201 });
   } catch (error) {
+    console.error("[Application POST Error]", error);
+
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON payload" },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to create application" },
       { status: 500 },
