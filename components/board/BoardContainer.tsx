@@ -119,7 +119,7 @@ export default function BoardContainer() {
             key={stage}
             stage={stage}
             applications={columnMap[stage]}
-            onCardClick={(id) => console.log("clicked", id)} // → modal in Week 2
+            onCardClick={(id) => console.log("clicked", id)}
             onAddCard={handleAddCard}
           />
         ))}
