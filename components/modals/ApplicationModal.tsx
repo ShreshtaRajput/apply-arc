@@ -1,6 +1,6 @@
 "use client";
 
-import { Application } from "@/types";
+import { Application, Stage } from "@/types";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
-import { updateApplication } from "@/store/slices/boardSlice";
+import { updateApplication, selectByStage } from "@/store/slices/boardSlice";
 import { auth } from "@/lib/firebase";
 import { c, g1box } from "@/lib/theme";
 
@@ -36,15 +36,57 @@ export default function ApplicationModal({
     stage: application.stage || "saved",
   });
 
+  const targetColumnApps = useSelector(selectByStage(formData.stage as Stage));
+
   const handleSave = () => {
     if (!auth.currentUser) return;
+
+    const finalUpdates: any = {};
+
+    // Standard fields: Only update if changed
+    if (formData.company !== application.company)
+      finalUpdates.company = formData.company;
+    if (formData.role !== application.role) finalUpdates.role = formData.role;
+
+    // Optional fields: Only update if changed, prevents sending "" to the DB
+    if (formData.jobUrl !== (application.jobUrl || ""))
+      finalUpdates.jobUrl = formData.jobUrl;
+    if (formData.salary !== (application.salary || ""))
+      finalUpdates.salary = formData.salary;
+    if (formData.location !== (application.location || ""))
+      finalUpdates.location = formData.location;
+    if (formData.notes !== (application.notes || ""))
+      finalUpdates.notes = formData.notes;
+
+    // Stage change: Add the new stage AND calculate the target order
+    if (formData.stage !== application.stage) {
+      finalUpdates.stage = formData.stage;
+      finalUpdates.order = targetColumnApps.length;
+    }
+
+    // Abort if no changes were actually made
+    if (Object.keys(finalUpdates).length === 0) {
+      onClose();
+      return;
+    }
+
+    // Dispatch payload
     dispatch(
       updateApplication({
         id: application._id,
-        updates: formData,
+        updates: finalUpdates,
       }),
     );
+
     onClose();
+    // if (!auth.currentUser) return;
+    // dispatch(
+    //   updateApplication({
+    //     id: application._id,
+    //     updates: formData,
+    //   }),
+    // );
+    // onClose();
   };
 
   // Reusable input style object to keep markup clean
@@ -77,7 +119,7 @@ export default function ApplicationModal({
         </div>
 
         {/* Scrollable Form Area */}
-        <div className="p-6 overflow-y-auto hide-scrollbar space-y-5">
+        <div className="p-6 overflow-y-auto theme-scrollbar space-y-5">
           {/* Company - Full Width */}
           <div>
             <label className={labelClass} style={{ color: c.t3 }}>
@@ -122,12 +164,24 @@ export default function ApplicationModal({
                 className="w-full rounded-xl px-4 py-2.5 text-sm font-medium outline-none transition-all focus:ring-2 appearance-none cursor-pointer"
                 style={inputStyle}
               >
-                <option value="saved">Saved</option>
-                <option value="applied">Applied</option>
-                <option value="oa">Online Assessment</option>
-                <option value="interview">Interview</option>
-                <option value="offer">Offer</option>
-                <option value="rejected">Rejected</option>
+                <option value="saved" className="bg-[#1C1C2E] text-white">
+                  Saved
+                </option>
+                <option value="applied" className="bg-[#1C1C2E] text-white">
+                  Applied
+                </option>
+                <option value="oa" className="bg-[#1C1C2E] text-white">
+                  Online Assessment
+                </option>
+                <option value="interview" className="bg-[#1C1C2E] text-white">
+                  Interview
+                </option>
+                <option value="offer" className="bg-[#1C1C2E] text-white">
+                  Offer
+                </option>
+                <option value="rejected" className="bg-[#1C1C2E] text-white">
+                  Rejected
+                </option>
               </select>
             </div>
           </div>
@@ -224,160 +278,3 @@ export default function ApplicationModal({
     </Dialog>
   );
 }
-
-// "use client";
-
-// import { Application } from "@/types";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-// } from "@/components/ui/dialog";
-// import { Button } from "@/components/ui/button";
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { AppDispatch } from "@/store";
-// import { updateApplication } from "@/store/slices/boardSlice";
-// import { auth } from "@/lib/firebase";
-
-// interface Props {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   application: Application;
-// }
-
-// export default function ApplicationModal({
-//   isOpen,
-//   onClose,
-//   application,
-// }: Props) {
-//   const dispatch = useDispatch<AppDispatch>();
-//   const [formData, setFormData] = useState({
-//     company: application.company,
-//     role: application.role,
-//     jobUrl: application.jobUrl || "",
-//     salary: application.salary || "",
-//     location: application.location || "",
-//     notes: application.notes || "",
-//     stage: application.stage || "saved",
-//   });
-
-//   const handleSave = () => {
-//     if (!auth.currentUser) return;
-//     dispatch(
-//       updateApplication({
-//         id: application._id,
-//         updates: formData,
-//       }),
-//     );
-//     onClose();
-//   };
-
-//   // const handleSave = () => {
-//   //   dispatch(
-//   //     updateApplication({
-//   //       id: application._id,
-//   //       updates: formData,
-//   //     }),
-//   //   );
-//   //   onClose();
-//   // };
-
-//   return (
-//     <Dialog open={isOpen} onOpenChange={onClose}>
-//       <DialogContent className="bg-[#1C1C2E] border border-white/10 p-6 rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-//         <DialogHeader>
-//           <DialogTitle className="text-white text-xl font-semibold mb-1">
-//             Edit Application
-//           </DialogTitle>
-//         </DialogHeader>
-
-//         <div className="flex flex-col gap-3 mt-2">
-//           <label className="text-white/60 text-sm">Company</label>
-//           <input
-//             type="text"
-//             value={formData.company}
-//             onChange={(e) =>
-//               setFormData({ ...formData, company: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-
-//           <label className="text-white/60 text-sm">Role</label>
-//           <input
-//             type="text"
-//             value={formData.role}
-//             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-
-//           <label className="text-white/60 text-sm">Stage</label>
-//           <select
-//             value={formData.stage}
-//             onChange={(e) =>
-//               setFormData({ ...formData, stage: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           >
-//             <option value="saved">Saved</option>
-//             <option value="applied">Applied</option>
-//             <option value="oa">OA</option>
-//             <option value="interview">Interview</option>
-//             <option value="offer">Offer</option>
-//             <option value="rejected">Rejected</option>
-//           </select>
-
-//           <label className="text-white/60 text-sm">Job URL</label>
-//           <input
-//             type="text"
-//             value={formData.jobUrl}
-//             onChange={(e) =>
-//               setFormData({ ...formData, jobUrl: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-
-//           <label className="text-white/60 text-sm">Salary</label>
-//           <input
-//             type="text"
-//             value={formData.salary}
-//             onChange={(e) =>
-//               setFormData({ ...formData, salary: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-
-//           <label className="text-white/60 text-sm">Location</label>
-//           <input
-//             type="text"
-//             value={formData.location}
-//             onChange={(e) =>
-//               setFormData({ ...formData, location: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-
-//           <label className="text-white/60 text-sm">Notes</label>
-//           <textarea
-//             value={formData.notes}
-//             onChange={(e) =>
-//               setFormData({ ...formData, notes: e.target.value })
-//             }
-//             className="w-full bg-[#2A2A3A] border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-//             rows={4}
-//           />
-
-//           <Button
-//             onClick={handleSave}
-//             variant="outline"
-//             size="sm"
-//             className="mt-2 w-full"
-//           >
-//             Save Changes
-//           </Button>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }

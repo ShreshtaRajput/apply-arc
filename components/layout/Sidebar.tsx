@@ -18,6 +18,7 @@ import {
   RxChevronLeft,
   RxExit,
 } from "react-icons/rx";
+import Image from "next/image";
 
 const NAV_ITEMS = [
   { label: "Board", href: "/board", Icon: RxDashboard },
@@ -27,7 +28,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -69,21 +70,13 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 9,
-              background: `linear-gradient(135deg, ${c.indigo}, ${c.violet})`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              boxShadow: `0 0 18px rgba(129,140,248,.35)`,
-            }}
-          >
-            <RxDashboard size={14} color="white" />
-          </div>
+          <Image
+            src="/logo.png"
+            alt="ApplyArc Logo"
+            width={32}
+            height={32}
+            className="w-8 h-8 object-contain rounded-lg"
+          />
           <AnimatePresence initial={false}>
             {!collapsed && (
               <motion.span

@@ -1,44 +1,35 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { c, displayFont, g1box, cardReveal } from "@/lib/theme";
+import { c, g1box, cardReveal } from "@/lib/theme";
 import { steps } from "@/lib/constants";
 
 export default function HowItWorks() {
   return (
-    <section
-      style={{ padding: "0 20px 80px", maxWidth: 900, margin: "0 auto" }}
-    >
+    <section id="how-it-works" className="px-5 pb-20 max-w-[900px] mx-auto">
+      {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.65 }}
-        style={{ textAlign: "center", marginBottom: 48 }}
+        className="text-center mb-12"
       >
         <div
+          className="inline-block px-3.5 py-1 rounded-full text-[11.5px] font-bold tracking-wide mb-3.5 shadow-sm"
           style={{
-            display: "inline-block",
-            padding: "4px 14px",
-            borderRadius: 100,
-            background: "rgba(34,211,238,.09)",
-            border: "1px solid rgba(34,211,238,.22)",
-            fontSize: 11.5,
-            fontWeight: 600,
+            background: `rgba(34,211,238,.09)`,
+            border: `1px solid rgba(34,211,238,.22)`,
             color: c.cyan,
-            marginBottom: 14,
           }}
         >
           How It Works
         </div>
+
+        {/* APPLIED: font-heading */}
         <h2
-          style={{
-            ...displayFont,
-            fontSize: "clamp(22px, 3.5vw, 34px)",
-            fontWeight: 700,
-            color: c.t1,
-            letterSpacing: "-0.025em",
-          }}
+          className="font-heading text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+          style={{ color: c.t1 }}
         >
           From chaos to clarity
           <br />
@@ -46,44 +37,36 @@ export default function HowItWorks() {
         </h2>
       </motion.div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 14,
-        }}
-      >
+      {/* Steps Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {steps.map((s, i) => (
           <motion.div
             key={s.n}
             {...cardReveal}
             transition={{ duration: 0.55, delay: i * 0.1 }}
-            style={{ ...g1box, borderRadius: 18, padding: "26px 22px" }}
+            className="rounded-2xl p-7 relative overflow-hidden"
+            style={{ ...g1box }}
           >
+            {/* Step Number (Ghost Text) */}
             <div
-              style={{
-                ...displayFont,
-                fontSize: 34,
-                fontWeight: 800,
-                color: "rgba(255,255,255,.1)",
-                marginBottom: 12,
-                lineHeight: 1,
-              }}
+              className="font-heading text-[40px] font-extrabold leading-none mb-3"
+              style={{ color: "rgba(255,255,255,.05)" }}
             >
               {s.n}
             </div>
+
+            {/* APPLIED: font-heading */}
             <h3
-              style={{
-                ...displayFont,
-                fontSize: 15,
-                fontWeight: 600,
-                color: c.t1,
-                marginBottom: 8,
-              }}
+              className="font-heading text-[15px] font-bold mb-2"
+              style={{ color: c.t1 }}
             >
               {s.title}
             </h3>
-            <p style={{ fontSize: 12.5, color: c.t2, lineHeight: 1.65 }}>
+
+            <p
+              className="text-[12.5px] leading-relaxed opacity-80"
+              style={{ color: c.t2 }}
+            >
               {s.desc}
             </p>
           </motion.div>

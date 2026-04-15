@@ -3,20 +3,19 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, CheckCircle2 } from "lucide-react";
-import { c, displayFont, g1box, g2box, fadeUp } from "@/lib/theme";
+import { c, g1box, g2box, fadeUp } from "@/lib/theme";
 import { mockCards, perks } from "@/lib/constants";
 
 export default function Hero() {
   return (
     <section
-      style={{ position: "relative", overflow: "hidden", paddingBottom: 80 }}
+      id="about"
+      className="relative overflow-hidden pb-15 md:pt-15 lg:pt-25"
     >
-      {/* Dot grid */}
+      {/* Background Dot Grid */}
       <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
           backgroundImage:
             "radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px)",
           backgroundSize: "34px 34px",
@@ -27,99 +26,43 @@ export default function Hero() {
         }}
       />
 
-      {/* Animated blobs */}
-      <motion.div
-        animate={{ x: [0, 26, -18, 0], y: [0, -36, 16, 0] }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          top: "-8%",
-          left: "-12%",
-          width: 560,
-          height: 560,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(129,140,248,.22) 0%, transparent 68%)",
-          filter: "blur(72px)",
-          pointerEvents: "none",
-        }}
-      />
-      <motion.div
-        animate={{ x: [0, -32, 20, 0], y: [0, 26, -22, 0] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          bottom: "-5%",
-          right: "-10%",
-          width: 480,
-          height: 480,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(34,211,238,.18) 0%, transparent 68%)",
-          filter: "blur(72px)",
-          pointerEvents: "none",
-        }}
-      />
-      <motion.div
-        animate={{ x: [0, 12, 0], y: [0, -20, 0] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          top: "38%",
-          right: "10%",
-          width: 260,
-          height: 260,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(167,139,250,.17) 0%, transparent 68%)",
-          filter: "blur(56px)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          textAlign: "center",
-          padding: "68px 20px 0",
-          maxWidth: 760,
-          margin: "0 auto",
-        }}
-      >
-        {/* Badge */}
+      {/* Animated Ambient Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div
-          {...fadeUp(0)}
+          animate={{ x: [0, 26, -18, 0], y: [0, -36, 16, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[10%] -left-[10%] w-[560px] h-[560px] rounded-full blur-[72px]"
           style={{
-            marginBottom: 26,
-            display: "flex",
-            justifyContent: "center",
+            background:
+              "radial-gradient(circle, rgba(129,140,248,.15) 0%, transparent 68%)",
           }}
-        >
+        />
+        <motion.div
+          animate={{ x: [0, -32, 20, 0], y: [0, 26, -22, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-[5%] -right-[5%] w-[480px] h-[480px] rounded-full blur-[72px]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(34,211,238,.12) 0%, transparent 68%)",
+          }}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        {/* Beta Badge */}
+        <motion.div {...fadeUp(0)} className="mb-8 flex justify-center">
           <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide backdrop-blur-md shadow-sm"
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "5px 15px",
-              borderRadius: 100,
-              background: "rgba(129,140,248,.1)",
-              border: "1px solid rgba(129,140,248,.28)",
-              fontSize: 12,
-              fontWeight: 600,
+              background: `${c.indigo}15`,
+              border: `1px solid ${c.indigo}30`,
               color: c.indigo,
             }}
           >
             <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: c.emerald,
-                display: "inline-block",
-                animation: "pulse 2s ease infinite",
-              }}
+              className="w-2 h-2 rounded-full animate-pulse"
+              style={{ background: c.emerald }}
             />
             Real-time collaboration · Beta
           </div>
@@ -128,28 +71,11 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           {...fadeUp(0.1)}
-          style={{
-            ...displayFont,
-            fontSize: "clamp(44px, 8vw, 82px)",
-            fontWeight: 800,
-            lineHeight: 1.05,
-            letterSpacing: "-0.035em",
-            marginBottom: 20,
-          }}
+          className="font-heading text-5xl md:text-7xl lg:text-[82px] font-extrabold tracking-tight leading-[1.05] mb-6"
         >
           <span style={{ color: c.t1 }}>Track your every</span>
           <br />
-          <span
-            style={{
-              background:
-                "linear-gradient(130deg, #e2e8f0 0%, #a78bfa 30%, #818cf8 58%, #22d3ee 100%)",
-              backgroundSize: "280% 280%",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              animation: "gpan 7s ease infinite",
-            }}
-          >
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 animate-gradient-x">
             Job Application.
           </span>
         </motion.h1>
@@ -157,14 +83,8 @@ export default function Hero() {
         {/* Subtitle */}
         <motion.p
           {...fadeUp(0.2)}
-          style={{
-            fontSize: "clamp(14px, 2vw, 17px)",
-            color: c.t2,
-            maxWidth: 460,
-            margin: "0 auto 34px",
-            lineHeight: 1.78,
-            fontWeight: 300,
-          }}
+          className="text-lg md:text-xl font-medium max-w-2xl mx-auto mb-10 opacity-80"
+          style={{ color: c.t2 }}
         >
           A premium job tracker with a visual Kanban board, smart analytics, and
           real-time sync. Built for serious job seekers.
@@ -173,13 +93,7 @@ export default function Hero() {
         {/* CTAs */}
         <motion.div
           {...fadeUp(0.3)}
-          style={{
-            display: "flex",
-            gap: 11,
-            justifyContent: "center",
-            flexWrap: "wrap",
-            marginBottom: 28,
-          }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10"
         >
           <motion.div
             whileHover={{ scale: 1.04, y: -2 }}
@@ -187,251 +101,128 @@ export default function Hero() {
           >
             <Link
               href="/board"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-bold shadow-lg transition-all"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                padding: "12px 26px",
-                borderRadius: 12,
-                fontSize: 14.5,
-                fontWeight: 600,
-                background: `linear-gradient(135deg, ${c.indigo}, ${c.violet})`,
-                color: "white",
-                boxShadow: "0 4px 30px rgba(129,140,248,.42)",
+                background: c.indigo,
+                color: "#ffffff",
+                boxShadow: `0 8px 25px ${c.indigo}40`,
               }}
             >
-              Start Tracking Free <ArrowRight size={15} />
+              Start Tracking Free <ArrowRight size={16} />
             </Link>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <a
-              href="#features"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                padding: "12px 26px",
-                borderRadius: 12,
-                fontSize: 14.5,
-                fontWeight: 500,
-                ...g2box,
-                color: c.t1,
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              View Demo <ChevronRight size={15} />
-            </a>
           </motion.div>
         </motion.div>
 
         {/* Perks */}
         <motion.div
           {...fadeUp(0.4)}
-          style={{
-            display: "flex",
-            gap: 20,
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
+          className="flex flex-wrap justify-center gap-5 md:gap-8"
         >
           {perks.map((p) => (
             <div
               key={p}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 12,
-                color: c.t3,
-              }}
+              className="flex items-center gap-2 text-xs md:text-sm font-medium"
+              style={{ color: c.t3 }}
             >
-              <CheckCircle2 size={12} color={c.emerald} /> {p}
+              <CheckCircle2 size={16} color={c.emerald} /> {p}
             </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Product Mockup */}
+      {/* Floating Product Mockup */}
       <motion.div
-        initial={{ opacity: 0, y: 32 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: "relative",
-          zIndex: 1,
-          marginTop: 52,
-          padding: "0 20px",
-          maxWidth: 620,
-          margin: "52px auto 0",
-        }}
+        transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 mt-20 px-4 max-w-4xl mx-auto hidden md:block"
       >
-        {/* Glow */}
         <div
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-32 blur-[40px] pointer-events-none -z-10"
           style={{
-            position: "absolute",
-            bottom: -24,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "60%",
-            height: 150,
-            background:
-              "radial-gradient(ellipse, rgba(129,140,248,.32) 0%, transparent 68%)",
-            filter: "blur(28px)",
-            pointerEvents: "none",
-            zIndex: 0,
+            background: `radial-gradient(ellipse, ${c.indigo}40 0%, transparent 68%)`,
           }}
         />
 
-        {/* Panel */}
         <motion.div
-          animate={{ y: [0, -11, 0] }}
-          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="relative rounded-2xl overflow-hidden"
           style={{
-            position: "relative",
-            zIndex: 1,
-            borderRadius: 16,
             ...g1box,
-            overflow: "hidden",
             boxShadow:
-              "0 28px 90px rgba(0,0,0,.58), 0 0 0 1px rgba(255,255,255,.06)",
-            transform: "perspective(1100px) rotateX(11deg) rotateY(-4deg)",
+              "0 25px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)",
+            transform: "perspective(1100px) rotateX(8deg)",
           }}
         >
-          {/* Window bar */}
+          {/* Mockup Window Header */}
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "11px 15px",
-              borderBottom: `1px solid ${c.b1}`,
-              background: "rgba(255,255,255,.018)",
-            }}
+            className="flex items-center justify-between px-4 py-3 bg-white/5 border-b"
+            style={{ borderColor: c.b1 }}
           >
-            <div style={{ display: "flex", gap: 5 }}>
-              {[c.rose, c.amber, c.emerald].map((col) => (
-                <div
-                  key={col}
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    background: col,
-                    opacity: 0.9,
-                  }}
-                />
-              ))}
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-rose-500/90" />
+              <div className="w-3 h-3 rounded-full bg-amber-500/90" />
+              <div className="w-3 h-3 rounded-full bg-emerald-500/90" />
             </div>
             <span
-              style={{
-                ...displayFont,
-                fontSize: 11.5,
-                fontWeight: 600,
-                color: c.t3,
-              }}
+              className="font-heading text-xs font-bold"
+              style={{ color: c.t3 }}
             >
               ApplyArc — My Board
             </span>
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-                fontSize: 11,
-                color: c.emerald,
-              }}
+              className="flex items-center gap-2 text-xs font-medium"
+              style={{ color: c.emerald }}
             >
               <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: c.emerald,
-                  display: "inline-block",
-                }}
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ background: c.emerald }}
               />
-              3 online
+              Active
             </div>
           </div>
 
-          {/* Cards grid */}
-          <div
-            style={{
-              padding: "12px 12px 14px",
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 8,
-            }}
-          >
+          {/* Mockup Cards Grid */}
+          <div className="p-4 grid grid-cols-3 gap-4 bg-black/20">
             {mockCards.map((card) => (
               <div
                 key={card.co}
-                style={{ ...g1box, borderRadius: 10, padding: "9px 9px 8px" }}
+                className="rounded-xl p-3"
+                style={{ ...g2box }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginBottom: 6,
-                  }}
-                >
+                <div className="flex items-center gap-3 mb-3">
                   <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0"
                     style={{
-                      width: 23,
-                      height: 23,
-                      borderRadius: 6,
-                      background: `${card.ic}22`,
-                      border: `1px solid ${card.ic}35`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 10,
-                      fontWeight: 700,
+                      background: `${card.ic}15`,
+                      border: `1px solid ${card.ic}30`,
                       color: card.ic,
-                      flexShrink: 0,
                     }}
                   >
                     {card.i}
                   </div>
-                  <div style={{ overflow: "hidden", minWidth: 0 }}>
+                  <div className="overflow-hidden">
                     <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: c.t1,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
+                      className="text-sm font-bold truncate"
+                      style={{ color: c.t1 }}
                     >
                       {card.co}
                     </div>
                     <div
-                      style={{
-                        fontSize: 10,
-                        color: c.t3,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
+                      className="text-xs truncate opacity-70"
+                      style={{ color: c.t3 }}
                     >
                       {card.role}
                     </div>
                   </div>
                 </div>
                 <span
+                  className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
                   style={{
-                    fontSize: 9.5,
-                    fontWeight: 600,
                     color: card.sc,
                     background: card.sbg,
                     border: `1px solid ${card.sbc}`,
-                    padding: "2px 7px",
-                    borderRadius: 100,
                   }}
                 >
                   {card.stage}

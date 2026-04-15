@@ -38,7 +38,7 @@ export default function KanbanColumn({
   const { setNodeRef, isOver } = useDroppable({ id: stage });
 
   return (
-    <div className="flex flex-col w-64 flex-shrink-0">
+    <div className="shrink-0 w-[85vw] md:w-[320px] snap-center md:snap-align-none flex flex-col flex w-64 flex-shrink-0">
       {/* Column header */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">

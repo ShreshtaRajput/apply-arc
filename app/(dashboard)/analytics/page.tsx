@@ -84,17 +84,19 @@ export default function AnalyticsPage() {
     // Replaced the simple wrapper with the BoardPage's dark background wrapper
     <div className="min-h-screen bg-[#0C0C14]">
       {/* Main Content Area */}
-      <div className="p-6 max-w-7xl mx-auto space-y-8">
+      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white">Analytics Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-white font-heading">
+            Analytics Dashboard
+          </h1>
           <p className="text-white/50 mt-2">
             Track your job application progress and metrics.
           </p>
         </div>
 
-        {/* Summary Stats (Kept visible even when empty for layout structure) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Summary Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {[
             { label: "Total", value: applications.length },
             {

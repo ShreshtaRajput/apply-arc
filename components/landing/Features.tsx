@@ -1,70 +1,51 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { c, displayFont, g1box, cardReveal } from "@/lib/theme";
+import { c, g1box, cardReveal } from "@/lib/theme";
 import { features } from "@/lib/constants";
 
 export default function Features() {
   return (
-    <section
-      id="features"
-      style={{ padding: "80px 20px", maxWidth: 900, margin: "0 auto" }}
-    >
+    <section id="features" className="py-15 px-5 max-w-[900px] mx-auto">
+      {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.65 }}
-        style={{ textAlign: "center", marginBottom: 44 }}
+        className="text-center mb-11"
       >
         <div
+          className="inline-block px-3.5 py-1 rounded-full text-[11.5px] font-bold tracking-wide mb-3.5 shadow-sm"
           style={{
-            display: "inline-block",
-            padding: "4px 14px",
-            borderRadius: 100,
-            background: "rgba(129,140,248,.1)",
-            border: "1px solid rgba(129,140,248,.24)",
-            fontSize: 11.5,
-            fontWeight: 600,
+            background: `${c.indigo}15`,
+            border: `1px solid ${c.indigo}30`,
             color: c.indigo,
-            marginBottom: 14,
           }}
         >
           Features
         </div>
+
+        {/* APPLIED: font-heading */}
         <h2
-          style={{
-            ...displayFont,
-            fontSize: "clamp(24px, 4vw, 38px)",
-            fontWeight: 700,
-            color: c.t1,
-            marginBottom: 10,
-            letterSpacing: "-0.025em",
-          }}
+          className="font-heading text-3xl md:text-4xl lg:text-[38px] font-bold tracking-tight leading-tight mb-3"
+          style={{ color: c.t1 }}
         >
           Everything you need to
           <br />
           land your next role
         </h2>
+
         <p
-          style={{
-            fontSize: 14.5,
-            color: c.t2,
-            maxWidth: 400,
-            margin: "0 auto",
-          }}
+          className="text-[14.5px] max-w-[400px] mx-auto opacity-80"
+          style={{ color: c.t2 }}
         >
           Purpose-built tools that go far beyond a spreadsheet.
         </p>
       </motion.div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 14,
-        }}
-      >
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
         {features.map((f, i) => {
           const Icon = f.Icon;
           return (
@@ -73,56 +54,38 @@ export default function Features() {
               {...cardReveal}
               transition={{ duration: 0.55, delay: i * 0.08 }}
               whileHover={{ y: -4, background: c.g2, borderColor: c.b2 }}
-              style={{
-                ...g1box,
-                borderRadius: 18,
-                padding: "24px 20px",
-                position: "relative",
-                overflow: "hidden",
-                transition: "background .2s, border-color .2s",
-              }}
+              className="relative overflow-hidden rounded-2xl p-6 transition-colors duration-200"
+              style={{ ...g1box }}
             >
+              {/* Corner Glow Effect */}
               <div
-                style={{
-                  position: "absolute",
-                  top: -32,
-                  right: -32,
-                  width: 100,
-                  height: 100,
-                  borderRadius: "50%",
-                  background: f.color,
-                  filter: "blur(52px)",
-                  opacity: 0.13,
-                  pointerEvents: "none",
-                }}
+                className="absolute -top-8 -right-8 w-[100px] h-[100px] rounded-full blur-[52px] opacity-[0.13] pointer-events-none"
+                style={{ background: f.color }}
               />
+
+              {/* Icon Container */}
               <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 shadow-sm"
                 style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: 11,
                   background: `${f.color}16`,
                   border: `1px solid ${f.color}26`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 14,
                 }}
               >
                 <Icon size={18} color={f.color} />
               </div>
+
+              {/* APPLIED: font-heading */}
               <h3
-                style={{
-                  ...displayFont,
-                  fontSize: 14.5,
-                  fontWeight: 600,
-                  color: c.t1,
-                  marginBottom: 7,
-                }}
+                className="font-heading text-[14.5px] font-bold mb-2"
+                style={{ color: c.t1 }}
               >
                 {f.title}
               </h3>
-              <p style={{ fontSize: 12.5, color: c.t2, lineHeight: 1.65 }}>
+
+              <p
+                className="text-[12.5px] leading-relaxed opacity-80"
+                style={{ color: c.t2 }}
+              >
                 {f.desc}
               </p>
             </motion.div>
