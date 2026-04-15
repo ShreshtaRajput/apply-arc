@@ -89,7 +89,7 @@ export default function Navbar() {
         </Link>
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Link
-            href="/dashboard"
+            href="/board"
             style={{
               display: "block",
               padding: "7px 15px",

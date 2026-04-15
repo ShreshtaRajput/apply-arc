@@ -2,6 +2,7 @@ import { adminAuth } from "./firebaseAdmin";
 import { NextRequest } from "next/server";
 import { connectDB } from "./mongodb";
 import Application from "@/models/Application";
+import UserProfile from "@/models/userModel";
 
 export async function verifyUserAuth(req: NextRequest) {
   const authHeader = req.headers.get("Authorization");
@@ -33,6 +34,7 @@ export async function verifyUserAuth(req: NextRequest) {
       console.log(`User ${uid} deleted. Cleaning up MongoDB data...`);
       await connectDB();
       await Application.deleteMany({ uid });
+      await UserProfile.deleteOne({ uid });
     } else {
       console.error("Token verification failed:", error);
       throw new Error("Unauthorized: Invalid token");

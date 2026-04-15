@@ -137,7 +137,7 @@ export default function Hero() {
             marginBottom: 20,
           }}
         >
-          <span style={{ color: c.t1 }}>Track Every</span>
+          <span style={{ color: c.t1 }}>Track your every</span>
           <br />
           <span
             style={{
@@ -150,7 +150,7 @@ export default function Hero() {
               animation: "gpan 7s ease infinite",
             }}
           >
-            Application Arc.
+            Job Application.
           </span>
         </motion.h1>
 

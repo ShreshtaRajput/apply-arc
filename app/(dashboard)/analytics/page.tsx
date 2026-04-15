@@ -21,6 +21,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { fetchApplications } from "@/store/slices/boardSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useSocket } from "@/hooks/useSocket";
+import { motion } from "framer-motion";
 
 // Updated the first color to match the ApplyArc brand orange
 const COLORS = [
@@ -43,7 +44,9 @@ export default function AnalyticsPage() {
   useEffect(() => {
     if (user && applications.length === 0)
       dispatch(fetchApplications(user.uid));
-  }, [user, dispatch]);
+  }, [user, dispatch, applications.length]);
+
+  const hasData = applications.length > 0;
 
   const stageData = useMemo(() => {
     const stages = ["saved", "applied", "oa", "interview", "offer", "rejected"];
@@ -90,7 +93,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        {/* Summary Stats */}
+        {/* Summary Stats (Kept visible even when empty for layout structure) */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: "Total", value: applications.length },
@@ -109,7 +112,7 @@ export default function AnalyticsPage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="bg-[#1C1C2E] border border-white/10 rounded-xl p-4"
+              className="bg-[#1C1C2E] border border-white/10 rounded-xl p-4 shadow-md"
             >
               <p className="text-white/50 text-sm">{stat.label}</p>
               <p className="text-white text-3xl font-bold mt-1">{stat.value}</p>
@@ -117,150 +120,184 @@ export default function AnalyticsPage() {
           ))}
         </div>
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Bar Chart */}
-          <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6">
-            <h2 className="text-white font-semibold text-lg mb-4">
-              Applications by Stage
-            </h2>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stageData}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#ffffff10"
-                  />
-                  <XAxis
-                    dataKey="stage"
-                    tick={{ fill: "#ffffff60" }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    tick={{ fill: "#ffffff60" }}
-                    tickLine={false}
-                    axisLine={false}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "#ffffff08" }}
-                    contentStyle={{
-                      backgroundColor: "#1C1C2E",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
-                  {/* Changed fill color to brand orange */}
-                  <Bar dataKey="count" fill="#FF5533" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+        {/* Conditional Rendering: Charts OR Empty State */}
+        {hasData ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Bar Chart */}
+            <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6 shadow-lg">
+              <h2 className="text-white font-semibold text-lg mb-4">
+                Applications by Stage
+              </h2>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stageData}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#ffffff10"
+                    />
+                    <XAxis
+                      dataKey="stage"
+                      tick={{ fill: "#ffffff60" }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      tick={{ fill: "#ffffff60" }}
+                      tickLine={false}
+                      axisLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#ffffff08" }}
+                      contentStyle={{
+                        backgroundColor: "#1C1C2E",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "8px",
+                        color: "#fff",
+                      }}
+                    />
+                    {/* Changed fill color to brand orange */}
+                    <Bar dataKey="count" fill="#FF5533" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
 
-          {/* Pie Chart */}
-          <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6">
-            <h2 className="text-white font-semibold text-lg mb-4">
-              Distribution Overview
-            </h2>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    innerRadius={60}
-                    paddingAngle={5}
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                        stroke="none"
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1C1C2E",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="bottom"
-                    height={36}
-                    iconType="circle"
-                    formatter={(value) => (
-                      <span style={{ color: "rgba(255,255,255,0.6)" }}>
-                        {value}
-                      </span>
-                    )}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+            {/* Pie Chart */}
+            <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6 shadow-lg">
+              <h2 className="text-white font-semibold text-lg mb-4">
+                Distribution Overview
+              </h2>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      innerRadius={60}
+                      paddingAngle={5}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                          stroke="none"
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1C1C2E",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "8px",
+                        color: "#fff",
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      formatter={(value) => (
+                        <span style={{ color: "rgba(255,255,255,0.6)" }}>
+                          {value}
+                        </span>
+                      )}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
 
-          {/* Line Chart — Full Width */}
-          <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6 lg:col-span-2">
-            <h2 className="text-white font-semibold text-lg mb-4">
-              Application Timeline
-            </h2>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineData}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#ffffff10"
-                  />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fill: "#ffffff60" }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    tick={{ fill: "#ffffff60" }}
-                    tickLine={false}
-                    axisLine={false}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1C1C2E",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
-                  {/* Changed stroke color and dot color to brand orange */}
-                  <Line
-                    type="monotone"
-                    dataKey="count"
-                    stroke="#FF5533"
-                    strokeWidth={3}
-                    dot={{
-                      r: 4,
-                      fill: "#FF5533",
-                      strokeWidth: 2,
-                      stroke: "#1C1C2E",
-                    }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            {/* Line Chart — Full Width */}
+            <div className="bg-[#1C1C2E] border border-white/10 rounded-xl p-6 shadow-lg lg:col-span-2">
+              <h2 className="text-white font-semibold text-lg mb-4">
+                Application Timeline
+              </h2>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={lineData}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#ffffff10"
+                    />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fill: "#ffffff60" }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      tick={{ fill: "#ffffff60" }}
+                      tickLine={false}
+                      axisLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1C1C2E",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "8px",
+                        color: "#fff",
+                      }}
+                    />
+                    {/* Changed stroke color and dot color to brand orange */}
+                    <Line
+                      type="monotone"
+                      dataKey="count"
+                      stroke="#FF5533"
+                      strokeWidth={3}
+                      dot={{
+                        r: 4,
+                        fill: "#FF5533",
+                        strokeWidth: 2,
+                        stroke: "#1C1C2E",
+                      }}
+                      activeDot={{ r: 6 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          /* Premium Empty State */
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full flex flex-col items-center justify-center rounded-2xl p-12 text-center bg-[#1C1C2E] border border-dashed border-white/20 min-h-[400px] shadow-sm"
+          >
+            {/* Subtle Chart Icon */}
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-5 bg-white/5 border border-white/10 shadow-inner">
+              <svg
+                className="w-8 h-8 text-white/30"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 13h2.243a2 2 0 011.566.75l2.7 3.6a2 2 0 001.565.75H15.62a2 2 0 001.566-.75l2.7-3.6a2 2 0 011.565-.75H21m-9 4v5m-3-5v5m6-5v5"
+                />
+              </svg>
+            </div>
+
+            <h3 className="text-xl font-bold text-white mb-2">
+              No Application Data Yet
+            </h3>
+            <p className="text-white/50 max-w-sm text-sm">
+              Your analytics dashboard will automatically populate with insights
+              and graphs once you start tracking jobs on your board.
+            </p>
+          </motion.div>
+        )}
       </div>
     </div>
   );
