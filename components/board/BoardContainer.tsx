@@ -204,7 +204,7 @@ export default function BoardContainer() {
             })}
           </div>
           {/* ================================== */}
-          /* MOBILE VIEW: Expanded Stage Overlay */
+          {/* MOBILE VIEW: Expanded Stage Overlay */}
           {/* ================================== */}
           <AnimatePresence>
             {activeStage && (
