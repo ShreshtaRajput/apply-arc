@@ -30,7 +30,7 @@ export const g2box = { background: c.g2, border: `1px solid ${c.b2}` };
 export const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.75, delay, ease: [0.16, 1, 0.3, 1] as const },
+  transition: { duration: 0.75, delay, ease: [0.16, 1, 0.3, 1] },
 });
 
 export const cardReveal = {
