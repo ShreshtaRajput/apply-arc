@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { c, g1box, g2box, fadeUp } from "@/lib/theme";
 import { mockCards, perks } from "@/lib/constants";
 
@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden pb-15 md:pt-15 lg:pt-25"
+      className="relative overflow-hidden pt-32 pb-15 md:pt-15 lg:pt-25"
     >
       {/* Background Dot Grid */}
       <div
