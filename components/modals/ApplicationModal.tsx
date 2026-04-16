@@ -159,7 +159,7 @@ export default function ApplicationModal({
               <select
                 value={formData.stage}
                 onChange={(e) =>
-                  setFormData({ ...formData, stage: e.target.value })
+                  setFormData({ ...formData, stage: e.target.value as Stage })
                 }
                 className="w-full rounded-xl px-4 py-2.5 text-sm font-medium outline-none transition-all focus:ring-2 appearance-none cursor-pointer"
                 style={inputStyle}

@@ -3,7 +3,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/landing/Hero";
-import StatsBar from "@/components/landing/StatsBar";
 import Features from "@/components/landing/Features";
 import StagesRow from "@/components/landing/StagesRow";
 import HowItWorks from "@/components/landing/HowItWorks";
