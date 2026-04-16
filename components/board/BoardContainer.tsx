@@ -180,7 +180,7 @@ export default function BoardContainer() {
 
                   <div className="flex items-center gap-2 mb-2">
                     <div
-                      className="w-2.5 h-2.5 rounded-full"
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{
                         background: config.color,
                         boxShadow: `0 0 10px ${config.color}`,
@@ -212,7 +212,6 @@ export default function BoardContainer() {
                 layoutId={`stage-card-${activeStage}`}
                 className="fixed inset-0 z-50 bg-[#0C0C14] flex flex-col overflow-hidden"
               >
-                {/* Fixed Header */}
                 <div
                   className="px-4 py-4 flex items-center justify-between border-b shrink-0 z-20"
                   style={{ background: c.g1, borderColor: c.b1 }}
@@ -229,10 +228,10 @@ export default function BoardContainer() {
                   >
                     {stageConfig[activeStage].label}
                   </span>
-                  <div className="w-16" /> {/* Spacer for centering */}
+                  <div className="w-16" />
                 </div>
 
-                {/* The Kanban Column (Forced to take full width via CSS override) */}
+                {/* The Kanban Column */}
                 <div className="flex-1 overflow-y-auto theme-scrollbar p-5 flex justify-center [&>div]:w-full [&>div]:max-w-md">
                   <KanbanColumn
                     stage={activeStage}
