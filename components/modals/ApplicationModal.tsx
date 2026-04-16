@@ -10,7 +10,11 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
-import { updateApplication, selectByStage } from "@/store/slices/boardSlice";
+import {
+  updateApplication,
+  selectByStage,
+  deleteApplication,
+} from "@/store/slices/boardSlice";
 import { auth } from "@/lib/firebase";
 import { c, g1box } from "@/lib/theme";
 
@@ -35,6 +39,10 @@ export default function ApplicationModal({
     notes: application.notes || "",
     stage: application.stage || "saved",
   });
+
+  // State for the delete operation
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState("");
 
   const targetColumnApps = useSelector(selectByStage(formData.stage as Stage));
 
@@ -87,6 +95,27 @@ export default function ApplicationModal({
     //   }),
     // );
     // onClose();
+  };
+
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this application? This cannot be undone.",
+    );
+    if (!isConfirmed) return;
+
+    setIsDeleting(true);
+    setError("");
+
+    try {
+      // .unwrap() allows us to catch any errors thrown by the async thunk
+      await dispatch(deleteApplication({ id: application._id })).unwrap();
+      onClose();
+    } catch (err: any) {
+      console.error("[Delete Application Error]", err);
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Reusable input style object to keep markup clean
@@ -260,11 +289,11 @@ export default function ApplicationModal({
           style={{ background: c.g2, borderColor: c.b1 }}
         >
           <button
-            onClick={onClose}
+            onClick={handleDelete}
             className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-[0.98] hover:brightness-110"
             style={{ color: c.t2, border: `1px solid ${c.b2}` }}
           >
-            Cancel
+            Delete
           </button>
           <button
             onClick={handleSave}
