@@ -82,18 +82,6 @@ Most job seekers track applications in Google Sheets or Notion — tools not bui
 
 ---
 
-## What You Learned Building This
-
-Since this is a portfolio project, it's worth being honest in the README about what was new:
-
-- Firebase Auth (including Admin SDK for server-side verification)
-- Redux Toolkit (state management at scale)
-- Socket.io (WebSocket-based real-time sync)
-- Upstash Redis (caching strategy and invalidation)
-- Next.js 15 App Router patterns (async params, server components, route handlers)
-
----
-
 ## Project Structure (high level)
 
 ```
