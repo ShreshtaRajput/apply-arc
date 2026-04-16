@@ -14,15 +14,18 @@ export default function Hero() {
     >
       {/* Background Dot Grid */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="dot-grid absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px)",
           backgroundSize: "34px 34px",
-          maskImage:
-            "radial-gradient(ellipse 75% 65% at 50% 30%, black 0%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 75% 65% at 50% 30%, black 0%, transparent 100%)",
+          // backgroundImage:
+          //   "radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px)",
+          // backgroundSize: "34px 34px",
+          // maskImage:
+          //   "radial-gradient(ellipse 75% 65% at 50% 30%, black 0%, transparent 100%)",
+          // WebkitMaskImage:
+          //   "radial-gradient(ellipse 75% 65% at 50% 30%, black 0%, transparent 100%)",
         }}
       />
 
