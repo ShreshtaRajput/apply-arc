@@ -82,7 +82,7 @@ Most job seekers track applications in Google Sheets or Notion — tools not bui
 
 ---
 
-## Project Structure (high level)
+## Project Structure
 
 ```
 applyarc/
